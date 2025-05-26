@@ -19,6 +19,8 @@ public class DiretorioResponseTransfer {
 
     private String enderecoFisico;
 
+    private String tamanho;
+
     public Long getCodeDiretorioPai() {
         return codeDiretorioPai;
     }
@@ -57,6 +59,14 @@ public class DiretorioResponseTransfer {
 
     public void setEnderecoFisico(String enderecoFisico) {
         this.enderecoFisico = enderecoFisico;
+    }
+
+    public String getTamanho() {
+        return tamanho;
+    }
+
+    public void setTamanho(String tamanho) {
+        this.tamanho = tamanho;
     }
 
 }

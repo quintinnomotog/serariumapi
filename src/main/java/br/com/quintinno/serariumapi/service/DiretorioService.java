@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 import br.com.quintinno.serariumapi.entity.DiretorioEntity;
 import br.com.quintinno.serariumapi.entity.ParametroEntity;
 import br.com.quintinno.serariumapi.enumeration.ConstanteUtilityEnumeration;
+import br.com.quintinno.serariumapi.exception.DiretorioCadastradoNoBancoDeDadosException;
+import br.com.quintinno.serariumapi.repository.DiretorioInterfaceImplementacaoRepository;
 import br.com.quintinno.serariumapi.repository.DiretorioRepository;
 import br.com.quintinno.serariumapi.repository.ParametroRepository;
 import br.com.quintinno.serariumapi.transfer.DiretorioRequestTransfer;
@@ -27,19 +30,24 @@ public class DiretorioService {
 
     private final ParametroRepository parametroRepository;
 
-    public DiretorioService(DiretorioRepository diretorioRepository, ParametroRepository parametroRepository) {
+    private final DiretorioInterfaceImplementacaoRepository diretorioInterfaceImplementacaoRepository;
+
+    public DiretorioService(
+            DiretorioRepository diretorioRepository, 
+            ParametroRepository parametroRepository, 
+            DiretorioInterfaceImplementacaoRepository diretorioInterfaceImplementacaoRepository) {
         this.diretorioRepository = diretorioRepository;
         this.parametroRepository = parametroRepository;
+        this.diretorioInterfaceImplementacaoRepository = diretorioInterfaceImplementacaoRepository;
     }
 
     public DiretorioResponseTransfer create(DiretorioRequestTransfer diretorioRequestTransfer) {
         try {
-            String enderecoFisicoDiretorio = this.criarDiretorioNoSistemaDeArquivos(diretorioRequestTransfer);
-            diretorioRequestTransfer.setEnderecoFisico(enderecoFisicoDiretorio);
+            diretorioRequestTransfer.setEnderecoFisico(this.criarDiretorioNoSistemaDeArquivos(diretorioRequestTransfer));
             return criarDiretorioNoBancoDeDados(diretorioRequestTransfer);
-        } catch (Exception e) {
-            logger.error("Erro ao tentar criar o diretório: {}", e.getMessage(), e);
-            throw new RuntimeException("Erro ao tentar criar o diretório", e);
+        } catch (IOException e) {
+            logger.error("Erro ao criar diretório no sistema de arquivos", e);
+            throw new RuntimeException("Erro ao criar diretório no sistema de arquivos", e);
         }
     }
 
@@ -49,7 +57,7 @@ public class DiretorioService {
         if (diretorioTransfer.getCodeDiretorioPai() != null) {
             DiretorioEntity diretorioPai = diretorioRepository.findByCode(diretorioTransfer.getCodeDiretorioPai());
             if (diretorioPai == null) {
-                logger.error("Diretório pai não encontrado: {}", diretorioTransfer.getCodeDiretorioPai());
+                logger.error("Diretório pai não encontrado: {%s}", diretorioTransfer.getCodeDiretorioPai());
                 throw new RuntimeException("Diretório pai não encontrado!");
             }
             path = path.resolve(diretorioPai.getNome());
@@ -61,10 +69,17 @@ public class DiretorioService {
     }
 
     private DiretorioResponseTransfer criarDiretorioNoBancoDeDados(DiretorioRequestTransfer diretorioRequestTransfer) {
+        List<DiretorioEntity> diretorioList = diretorioInterfaceImplementacaoRepository
+                .verificarSeDiretorioExistente(diretorioRequestTransfer.getNome(), diretorioRequestTransfer.getCodeDiretorioPai());
+        if (!diretorioList.isEmpty()) {
+            logger.error("Diretório já cadastrado no Banco de Dados: {}", diretorioRequestTransfer.getNome());
+            throw new DiretorioCadastradoNoBancoDeDadosException(String.format("Diretório já cadastrado no Banco de Dados!", diretorioRequestTransfer.getNome()));
+        }
         DiretorioEntity diretorioEntity = new DiretorioEntity();
             diretorioEntity.setCodeDiretorioPai(diretorioRequestTransfer.getCodeDiretorioPai());
             diretorioEntity.setNome(diretorioRequestTransfer.getNome());
             diretorioEntity.setCodePublic(gerarCodePublic());
+            diretorioEntity.setTamanho("0");
             diretorioEntity.setEnderecoFisico(diretorioRequestTransfer.getEnderecoFisico());
         return DiretorioEntity.toTransfer(diretorioRepository.save(diretorioEntity));
     }

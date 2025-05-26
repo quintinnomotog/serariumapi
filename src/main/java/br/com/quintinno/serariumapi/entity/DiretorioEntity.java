@@ -57,6 +57,8 @@ public class DiretorioEntity {
             diretorioResponseTransfer.setCodeDiretorioPai(diretorioEntity.getCodeDiretorioPai());
             diretorioResponseTransfer.setCodePublic(diretorioEntity.getCodePublic());
             diretorioResponseTransfer.setNome(diretorioEntity.getNome());
+            diretorioResponseTransfer.setTamanho(diretorioEntity.getTamanho());
+            diretorioResponseTransfer.setEnderecoFisico(diretorioEntity.getEnderecoFisico());
         return diretorioResponseTransfer;
     }
 

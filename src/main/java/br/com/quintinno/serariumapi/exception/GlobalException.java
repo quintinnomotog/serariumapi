@@ -34,4 +34,10 @@ public class GlobalException {
         return new ResponseEntity<>(errorList, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(DiretorioCadastradoNoBancoDeDadosException.class)
+    public ResponseEntity<String> handleDiretorioNaoEncontrado(DiretorioCadastradoNoBancoDeDadosException diretorioCadastradoNoBancoDeDadosException) {
+        return ResponseEntity.status(HttpStatus.FOUND).body(diretorioCadastradoNoBancoDeDadosException.getMessage());
+    }
+
+
 }

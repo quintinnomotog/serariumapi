@@ -5,7 +5,14 @@ meta {
 }
 
 post {
-  url: http://localhost:8080/
-  body: none
+  url: http://localhost:8080/diretorio
+  body: json
   auth: none
+}
+
+body:json {
+  {
+    "codeDiretorioPai": 1,
+    "nome":"2. Artigos"
+  }
 }
