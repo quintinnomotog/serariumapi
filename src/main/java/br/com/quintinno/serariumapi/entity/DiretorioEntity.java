@@ -2,7 +2,7 @@ package br.com.quintinno.serariumapi.entity;
 
 import java.time.LocalDateTime;
 
-import br.com.quintinno.serariumapi.transfer.DiretorioTransfer;
+import br.com.quintinno.serariumapi.transfer.DiretorioResponseTransfer;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -48,13 +48,13 @@ public class DiretorioEntity {
         this.tamanho = tamanho;
     }
 
-    public static DiretorioTransfer toTransfer(DiretorioEntity diretorioEntity) {
-        DiretorioTransfer diretorioTransfer = new DiretorioTransfer();
-            diretorioEntity.setCode(diretorioEntity.getCode());
-            diretorioTransfer.setCodeDiretorioPai(diretorioEntity.getCodeDiretorioPai());
-            diretorioTransfer.setCodePublic(diretorioEntity.getCodePublic());
-            diretorioTransfer.setNome(diretorioEntity.getNome());
-        return diretorioTransfer;
+    public static DiretorioResponseTransfer toTransfer(DiretorioEntity diretorioEntity) {
+        DiretorioResponseTransfer diretorioResponseTransfer = new DiretorioResponseTransfer();
+            diretorioResponseTransfer.setCode(diretorioEntity.getCode());
+            diretorioResponseTransfer.setCodeDiretorioPai(diretorioEntity.getCodeDiretorioPai());
+            diretorioResponseTransfer.setCodePublic(diretorioEntity.getCodePublic());
+            diretorioResponseTransfer.setNome(diretorioEntity.getNome());
+        return diretorioResponseTransfer;
     }
 
     public Long getCode() {

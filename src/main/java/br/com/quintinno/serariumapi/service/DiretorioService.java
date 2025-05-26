@@ -15,7 +15,8 @@ import br.com.quintinno.serariumapi.entity.ParametroEntity;
 import br.com.quintinno.serariumapi.enumeration.ConstanteUtilityEnumeration;
 import br.com.quintinno.serariumapi.repository.DiretorioRepository;
 import br.com.quintinno.serariumapi.repository.ParametroRepository;
-import br.com.quintinno.serariumapi.transfer.DiretorioTransfer;
+import br.com.quintinno.serariumapi.transfer.DiretorioRequestTransfer;
+import br.com.quintinno.serariumapi.transfer.DiretorioResponseTransfer;
 
 @Service
 public class DiretorioService {
@@ -31,7 +32,7 @@ public class DiretorioService {
         this.parametroRepository = parametroRepository;
     }
 
-    public DiretorioTransfer create(DiretorioTransfer diretorioTransfer) {
+    public DiretorioResponseTransfer create(DiretorioRequestTransfer diretorioTransfer) {
         try {
             this.criarDiretorioNoSistemaDeArquivos(diretorioTransfer);
             return criarDiretorioNoBancoDeDados(diretorioTransfer);
@@ -41,19 +42,18 @@ public class DiretorioService {
         }
     }
 
-    private void criarDiretorioNoSistemaDeArquivos(DiretorioTransfer diretorioTransfer) throws IOException {
+    private void criarDiretorioNoSistemaDeArquivos(DiretorioRequestTransfer diretorioTransfer) throws IOException {
         final Path path = Paths.get(this.getDiretorioRaiz());
         Files.createDirectories(path.resolve(diretorioTransfer.getNome()));
         logger.info("Diretório criado no sistema de arquivos: {}", path.resolve(diretorioTransfer.getNome()));
     }
 
-    private DiretorioTransfer criarDiretorioNoBancoDeDados(DiretorioTransfer diretorioTransfer) {
+    private DiretorioResponseTransfer criarDiretorioNoBancoDeDados(DiretorioRequestTransfer diretorioRequestTransfer) {
         DiretorioEntity diretorioEntity = new DiretorioEntity();
-            diretorioEntity.setCodeDiretorioPai(diretorioTransfer.getCodeDiretorioPai());
-            diretorioEntity.setNome(diretorioTransfer.getNome());
+            diretorioEntity.setCodeDiretorioPai(diretorioRequestTransfer.getCodeDiretorioPai());
+            diretorioEntity.setNome(diretorioRequestTransfer.getNome());
             diretorioEntity.setCodePublic(gerarCodePublic());
-        diretorioRepository.save(diretorioEntity);
-        return DiretorioEntity.toTransfer(diretorioEntity);
+        return DiretorioEntity.toTransfer(diretorioRepository.save(diretorioEntity));
     }
 
     private String getDiretorioRaiz() {
