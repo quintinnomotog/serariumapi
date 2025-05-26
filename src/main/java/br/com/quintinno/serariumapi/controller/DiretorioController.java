@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.quintinno.serariumapi.service.DiretorioService;
 import br.com.quintinno.serariumapi.transfer.DiretorioTransfer;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/diretorio")
@@ -19,7 +20,7 @@ public class DiretorioController {
     }
 
     @PostMapping
-    public DiretorioTransfer create(@RequestBody DiretorioTransfer diretorioTransfer) {
+    public DiretorioTransfer create(@Valid @RequestBody DiretorioTransfer diretorioTransfer) {
         return diretorioService.create(diretorioTransfer);
     }
 

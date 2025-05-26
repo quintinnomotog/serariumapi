@@ -52,8 +52,8 @@ public class DiretorioEntity {
         DiretorioTransfer diretorioTransfer = new DiretorioTransfer();
             diretorioEntity.setCode(diretorioEntity.getCode());
             diretorioTransfer.setCodeDiretorioPai(diretorioEntity.getCodeDiretorioPai());
+            diretorioTransfer.setCodePublic(diretorioEntity.getCodePublic());
             diretorioTransfer.setNome(diretorioEntity.getNome());
-            diretorioTransfer.setTamanho(diretorioEntity.getTamanho());
         return diretorioTransfer;
     }
 
