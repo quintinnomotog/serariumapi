@@ -16,10 +16,10 @@ public class ParametroEntity {
     @Column(name = "code", nullable = false)
     private Long code;
 
-    @Column(name = "chave", length = 50, unique = true, nullable = false)
+    @Column(name = "chave", length = 100, unique = true, nullable = false)
     private String chave;
 
-    @Column(name = "valor", length = 100, unique = true, nullable = false)
+    @Column(name = "valor", length = 255, unique = true, nullable = false)
     private String valor;
 
     public ParametroEntity() { }

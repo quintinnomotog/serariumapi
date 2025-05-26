@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.quintinno.serariumapi.entity.DiretorioEntity;
 import br.com.quintinno.serariumapi.repository.DiretorioRepository;
+import br.com.quintinno.serariumapi.repository.ParametroRepository;
 import br.com.quintinno.serariumapi.transfer.DiretorioTransfer;
 
 @Service
@@ -19,8 +20,11 @@ public class DiretorioService {
 
     private final DiretorioRepository diretorioRepository;
 
-    public DiretorioService(DiretorioRepository diretorioRepository) {
+    private final ParametroRepository paaraParametroRepository;
+
+    public DiretorioService(DiretorioRepository diretorioRepository, ParametroRepository parametroRepository) {
         this.diretorioRepository = diretorioRepository;
+        this.paaraParametroRepository = parametroRepository;
     }
 
     public DiretorioTransfer create(DiretorioTransfer diretorioTransfer) {
