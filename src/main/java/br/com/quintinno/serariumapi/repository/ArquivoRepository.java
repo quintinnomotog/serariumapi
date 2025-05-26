@@ -6,4 +6,4 @@ import org.springframework.stereotype.Repository;
 import br.com.quintinno.serariumapi.entity.ArquivoEntity;
 
 @Repository
-public interface ArquivoRepository extends JpaRepository<Long, ArquivoEntity> {}
+public interface ArquivoRepository extends JpaRepository<ArquivoEntity, Long> {}
