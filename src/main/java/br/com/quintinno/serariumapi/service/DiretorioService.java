@@ -1,14 +1,18 @@
 package br.com.quintinno.serariumapi.service;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import br.com.quintinno.serariumapi.entity.DiretorioEntity;
+import br.com.quintinno.serariumapi.entity.ParametroEntity;
+import br.com.quintinno.serariumapi.enumeration.ConstanteUtilityEnumeration;
 import br.com.quintinno.serariumapi.repository.DiretorioRepository;
 import br.com.quintinno.serariumapi.repository.ParametroRepository;
 import br.com.quintinno.serariumapi.transfer.DiretorioTransfer;
@@ -20,11 +24,11 @@ public class DiretorioService {
 
     private final DiretorioRepository diretorioRepository;
 
-    private final ParametroRepository paaraParametroRepository;
+    private final ParametroRepository parametroRepository;
 
     public DiretorioService(DiretorioRepository diretorioRepository, ParametroRepository parametroRepository) {
         this.diretorioRepository = diretorioRepository;
-        this.paaraParametroRepository = parametroRepository;
+        this.parametroRepository = parametroRepository;
     }
 
     public DiretorioTransfer create(DiretorioTransfer diretorioTransfer) {
@@ -38,17 +42,31 @@ public class DiretorioService {
     }
 
     private void criarDiretorioNoSistemaDeArquivos(DiretorioTransfer diretorioTransfer) throws IOException {
-        Path path = Paths.get("null");
+        final Path path = Paths.get(this.getDiretorioRaiz());
+        Files.createDirectories(path.resolve(diretorioTransfer.getNome()));
+        logger.info("Diretório criado no sistema de arquivos: {}", path.resolve(diretorioTransfer.getNome()));
     }
 
     private DiretorioTransfer criarDiretorioNoBancoDeDados(DiretorioTransfer diretorioTransfer) {
         DiretorioEntity diretorioEntity = new DiretorioEntity();
             diretorioEntity.setCodeDiretorioPai(diretorioTransfer.getCodeDiretorioPai());
             diretorioEntity.setNome(diretorioTransfer.getNome());
-            diretorioEntity.setRotulo(diretorioTransfer.getRotulo());
-            diretorioEntity.setTamanho(diretorioTransfer.getTamanho());
+            diretorioEntity.setCodePublic(gerarCodePublic());
         diretorioRepository.save(diretorioEntity);
         return DiretorioEntity.toTransfer(diretorioEntity);
+    }
+
+    private String getDiretorioRaiz() {
+        ParametroEntity parametroEntity = parametroRepository.findByChave(ConstanteUtilityEnumeration.CHAVE_ENDERECO_DIRETORIO.getChave());
+        if (parametroEntity == null) {
+            logger.error("Parâmetro do diretório raiz não encontrado!"); 
+            throw new RuntimeException("Parâmetro do diretório raiz não encontrado!");
+        }
+        return parametroEntity.getValor();
+    }
+
+    private String gerarCodePublic() {
+        return UUID.randomUUID().toString().replace("-", "");
     }
 
 }

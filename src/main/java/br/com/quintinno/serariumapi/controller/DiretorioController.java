@@ -1,5 +1,7 @@
 package br.com.quintinno.serariumapi.controller;
 
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,7 +18,8 @@ public class DiretorioController {
         this.diretorioService = diretorioService;
     }
 
-    public DiretorioTransfer create(DiretorioTransfer diretorioTransfer) {
+    @PostMapping
+    public DiretorioTransfer create(@RequestBody DiretorioTransfer diretorioTransfer) {
         return diretorioService.create(diretorioTransfer);
     }
 

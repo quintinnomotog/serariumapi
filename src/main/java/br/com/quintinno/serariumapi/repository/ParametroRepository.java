@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 import br.com.quintinno.serariumapi.entity.ParametroEntity;
 
 @Repository
-public interface ParametroRepository extends JpaRepository<ParametroEntity, Long> {}
+public interface ParametroRepository extends JpaRepository<ParametroEntity, Long> {
+    ParametroEntity findByChave(String chave);
+}

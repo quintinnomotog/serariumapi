@@ -25,29 +25,27 @@ public class DiretorioEntity {
     @Column(name = "nome", length = 255, unique = true, nullable = false)
     private String nome;
 
-    @Column(name = "rotulo", length = 100, unique = true, nullable = false)
-    private String rotulo;
+    @Column(name = "code_public", length = 255, unique = true, nullable = false)
+    private String codePublic;
 
     @Column(name = "tamanho", length = 10)
     private String tamanho;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
     public DiretorioEntity() {}
 
-    public DiretorioEntity(Long codeDiretorioPai, String nome, String rotulo, String tamanho) {
+    public DiretorioEntity(Long codeDiretorioPai, String nome, String tamanho) {
         this.codeDiretorioPai = codeDiretorioPai;
         this.nome = nome;
-        this.rotulo = rotulo;
         this.tamanho = tamanho;
-        this.createdAt = LocalDateTime.now();
     }
 
     public static DiretorioTransfer toTransfer(DiretorioEntity diretorioEntity) {
@@ -55,7 +53,6 @@ public class DiretorioEntity {
             diretorioEntity.setCode(diretorioEntity.getCode());
             diretorioTransfer.setCodeDiretorioPai(diretorioEntity.getCodeDiretorioPai());
             diretorioTransfer.setNome(diretorioEntity.getNome());
-            diretorioTransfer.setRotulo(diretorioEntity.getRotulo());
             diretorioTransfer.setTamanho(diretorioEntity.getTamanho());
         return diretorioTransfer;
     }
@@ -84,12 +81,12 @@ public class DiretorioEntity {
         this.nome = nome;
     }
 
-    public String getRotulo() {
-        return rotulo;
+    public String getCodePublic() {
+        return codePublic;
     }
 
-    public void setRotulo(String rotulo) {
-        this.rotulo = rotulo;
+    public void setCodePublic(String codePublic) {
+        this.codePublic = codePublic;
     }
 
     public String getTamanho() {
