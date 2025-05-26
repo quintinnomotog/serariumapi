@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 import br.com.quintinno.serariumapi.entity.DiretorioEntity;
 
 @Repository
-public interface DiretorioRepository extends JpaRepository<DiretorioEntity, Long> {}
+public interface DiretorioRepository extends JpaRepository<DiretorioEntity, Long> {
+    DiretorioEntity findByCode(Long code);
+}

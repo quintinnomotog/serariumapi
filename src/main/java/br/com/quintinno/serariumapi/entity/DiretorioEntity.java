@@ -22,11 +22,14 @@ public class DiretorioEntity {
     @Column(name = "code_diretorio_pai")
     private Long codeDiretorioPai;
 
-    @Column(name = "nome", length = 255, unique = true, nullable = false)
+    @Column(name = "nome", length = 255, nullable = false)
     private String nome;
 
     @Column(name = "code_public", length = 255, unique = true, nullable = false)
     private String codePublic;
+
+    @Column(name = "endereco_fisico", length = 255, nullable = false)
+    private String enderecoFisico;
 
     @Column(name = "tamanho", length = 10)
     private String tamanho;
@@ -119,6 +122,14 @@ public class DiretorioEntity {
 
     public void setDeletedAt(LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
+    }
+
+    public String getEnderecoFisico() {
+        return enderecoFisico;
+    }
+
+    public void setEnderecoFisico(String enderecoFisico) {
+        this.enderecoFisico = enderecoFisico;
     }
 
 }

@@ -17,7 +17,7 @@ public class GlobalException {
     private static final Logger logger = LoggerFactory.getLogger(GlobalException.class);
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<List<String>> handleValidationExceptions(MethodArgumentNotValidException methodArgumentNotValidException) {
+    public ResponseEntity<List<String>> handleValidationException(MethodArgumentNotValidException methodArgumentNotValidException) {
         logger.error("Erro ao processar a requisição: {}", methodArgumentNotValidException.getMessage());
         List<String> errorList = methodArgumentNotValidException.getBindingResult()
                                 .getFieldErrors()
@@ -25,6 +25,13 @@ public class GlobalException {
                                 .map(error -> error.getDefaultMessage())
                                 .collect(Collectors.toList());
         return new ResponseEntity<>(errorList, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<List<String>> handleRuntimeException(RuntimeException runtimeException) {
+        logger.error("Erro ao processar a requisição: {}", runtimeException.getMessage());
+        List<String> errorList = List.of("Erro interno: " + runtimeException.getMessage());
+        return new ResponseEntity<>(errorList, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }

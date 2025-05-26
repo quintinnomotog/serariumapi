@@ -17,6 +17,8 @@ public class DiretorioResponseTransfer {
     @Size(max = 255, message = "O nome do diretório não pode ter mais de 255 caracteres!")
     private String nome;
 
+    private String enderecoFisico;
+
     public Long getCodeDiretorioPai() {
         return codeDiretorioPai;
     }
@@ -47,6 +49,14 @@ public class DiretorioResponseTransfer {
 
     public void setCodePublic(String codePublic) {
         this.codePublic = codePublic;
+    }
+
+    public String getEnderecoFisico() {
+        return enderecoFisico;
+    }
+
+    public void setEnderecoFisico(String enderecoFisico) {
+        this.enderecoFisico = enderecoFisico;
     }
 
 }

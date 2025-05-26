@@ -32,20 +32,32 @@ public class DiretorioService {
         this.parametroRepository = parametroRepository;
     }
 
-    public DiretorioResponseTransfer create(DiretorioRequestTransfer diretorioTransfer) {
+    public DiretorioResponseTransfer create(DiretorioRequestTransfer diretorioRequestTransfer) {
         try {
-            this.criarDiretorioNoSistemaDeArquivos(diretorioTransfer);
-            return criarDiretorioNoBancoDeDados(diretorioTransfer);
+            String enderecoFisicoDiretorio = this.criarDiretorioNoSistemaDeArquivos(diretorioRequestTransfer);
+            diretorioRequestTransfer.setEnderecoFisico(enderecoFisicoDiretorio);
+            return criarDiretorioNoBancoDeDados(diretorioRequestTransfer);
         } catch (Exception e) {
-            logger.error("Erro ao criar diretório: {}", e.getMessage(), e);
-            throw new RuntimeException("Erro ao criar diretório", e);
+            logger.error("Erro ao tentar criar o diretório: {}", e.getMessage(), e);
+            throw new RuntimeException("Erro ao tentar criar o diretório", e);
         }
     }
 
-    private void criarDiretorioNoSistemaDeArquivos(DiretorioRequestTransfer diretorioTransfer) throws IOException {
-        final Path path = Paths.get(this.getDiretorioRaiz());
+    private String criarDiretorioNoSistemaDeArquivos(DiretorioRequestTransfer diretorioTransfer) throws IOException {
+        Path path = Paths.get(this.getDiretorioRaiz());
+
+        if (diretorioTransfer.getCodeDiretorioPai() != null) {
+            DiretorioEntity diretorioPai = diretorioRepository.findByCode(diretorioTransfer.getCodeDiretorioPai());
+            if (diretorioPai == null) {
+                logger.error("Diretório pai não encontrado: {}", diretorioTransfer.getCodeDiretorioPai());
+                throw new RuntimeException("Diretório pai não encontrado!");
+            }
+            path = path.resolve(diretorioPai.getNome());
+        }
+
         Files.createDirectories(path.resolve(diretorioTransfer.getNome()));
         logger.info("Diretório criado no sistema de arquivos: {}", path.resolve(diretorioTransfer.getNome()));
+        return path.resolve(diretorioTransfer.getNome()).toString();
     }
 
     private DiretorioResponseTransfer criarDiretorioNoBancoDeDados(DiretorioRequestTransfer diretorioRequestTransfer) {
@@ -53,13 +65,15 @@ public class DiretorioService {
             diretorioEntity.setCodeDiretorioPai(diretorioRequestTransfer.getCodeDiretorioPai());
             diretorioEntity.setNome(diretorioRequestTransfer.getNome());
             diretorioEntity.setCodePublic(gerarCodePublic());
+            diretorioEntity.setEnderecoFisico(diretorioRequestTransfer.getEnderecoFisico());
         return DiretorioEntity.toTransfer(diretorioRepository.save(diretorioEntity));
     }
 
     private String getDiretorioRaiz() {
-        ParametroEntity parametroEntity = parametroRepository.findByChave(ConstanteUtilityEnumeration.CHAVE_ENDERECO_DIRETORIO.getChave());
+        ParametroEntity parametroEntity = parametroRepository
+                .findByChave(ConstanteUtilityEnumeration.CHAVE_ENDERECO_DIRETORIO.getChave());
         if (parametroEntity == null) {
-            logger.error("Parâmetro do diretório raiz não encontrado!"); 
+            logger.error("Parâmetro do diretório raiz não encontrado!");
             throw new RuntimeException("Parâmetro do diretório raiz não encontrado!");
         }
         return parametroEntity.getValor();
