@@ -24,10 +24,10 @@ public class ArquivoEntity {
     @JoinColumn(name = "id_diretorio", nullable = false)
     private DiretorioEntity diretorioEntity;
 
-    @Column(name = "nome", length = 255, nullable = false)
+    @Column(name = "nome", length = 255, unique = true, nullable = false)
     private String nome;
 
-    @Column(name = "rotulo", length = 255, nullable = false)
+    @Column(name = "rotulo", length = 100, unique = true, nullable = false)
     private String rotulo;
 
     @Column(name = "tamanho", length = 10)

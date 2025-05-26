@@ -2,6 +2,8 @@ package br.com.quintinno.serariumapi.transfer;
 
 public class DiretorioTransfer {
 
+    private Long code;
+
     private Long codeDiretorioPai;
 
     private String nome;
@@ -9,8 +11,6 @@ public class DiretorioTransfer {
     private String rotulo;
 
     private String tamanho;
-
-    public DiretorioTransfer() {}
 
     public Long getCodeDiretorioPai() {
         return codeDiretorioPai;
@@ -42,6 +42,14 @@ public class DiretorioTransfer {
 
     public void setTamanho(String tamanho) {
         this.tamanho = tamanho;
+    }
+
+    public Long getCode() {
+        return code;
+    }
+
+    public void setCode(Long code) {
+        this.code = code;
     }
 
 }

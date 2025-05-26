@@ -2,6 +2,7 @@ package br.com.quintinno.serariumapi.entity;
 
 import java.time.LocalDateTime;
 
+import br.com.quintinno.serariumapi.transfer.DiretorioTransfer;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,10 +22,10 @@ public class DiretorioEntity {
     @Column(name = "code_diretorio_pai")
     private Long codeDiretorioPai;
 
-    @Column(name = "nome", length = 255, nullable = false)
+    @Column(name = "nome", length = 255, unique = true, nullable = false)
     private String nome;
 
-    @Column(name = "rotulo", length = 100, nullable = false)
+    @Column(name = "rotulo", length = 100, unique = true, nullable = false)
     private String rotulo;
 
     @Column(name = "tamanho", length = 10)
@@ -47,6 +48,16 @@ public class DiretorioEntity {
         this.rotulo = rotulo;
         this.tamanho = tamanho;
         this.createdAt = LocalDateTime.now();
+    }
+
+    public static DiretorioTransfer toTransfer(DiretorioEntity diretorioEntity) {
+        DiretorioTransfer diretorioTransfer = new DiretorioTransfer();
+            diretorioEntity.setCode(diretorioEntity.getCode());
+            diretorioTransfer.setCodeDiretorioPai(diretorioEntity.getCodeDiretorioPai());
+            diretorioTransfer.setNome(diretorioEntity.getNome());
+            diretorioTransfer.setRotulo(diretorioEntity.getRotulo());
+            diretorioTransfer.setTamanho(diretorioEntity.getTamanho());
+        return diretorioTransfer;
     }
 
     public Long getCode() {
