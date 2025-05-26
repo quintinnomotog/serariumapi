@@ -18,7 +18,7 @@ public class DiretorioEntity {
     @Column(name = "code", nullable = false)
     private Long code;
 
-    @Column(name = "code_diretorio_pai", nullable = false)
+    @Column(name = "code_diretorio_pai")
     private Long codeDiretorioPai;
 
     @Column(name = "nome", length = 255, nullable = false)
@@ -27,7 +27,7 @@ public class DiretorioEntity {
     @Column(name = "rotulo", length = 100, nullable = false)
     private String rotulo;
 
-    @Column(name = "tamanho", length = 10, nullable = false)
+    @Column(name = "tamanho", length = 10)
     private String tamanho;
 
     @Column(name = "created_at")
@@ -40,6 +40,14 @@ public class DiretorioEntity {
     private LocalDateTime deletedAt;
 
     public DiretorioEntity() {}
+
+    public DiretorioEntity(Long codeDiretorioPai, String nome, String rotulo, String tamanho) {
+        this.codeDiretorioPai = codeDiretorioPai;
+        this.nome = nome;
+        this.rotulo = rotulo;
+        this.tamanho = tamanho;
+        this.createdAt = LocalDateTime.now();
+    }
 
     public Long getCode() {
         return code;
