@@ -1,0 +1,18 @@
+meta {
+  name: Recuperar Diretórios Filhos
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8080/diretorio
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "codeDiretorioPai": 1,
+    "nome":"4. Estudos"
+  }
+}

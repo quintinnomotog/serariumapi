@@ -98,4 +98,12 @@ public class DiretorioService {
         return UUID.randomUUID().toString().replace("-", "");
     }
 
+    public List<DiretorioResponseTransfer> recuperarTodosOsDiretoriosDeUmDiretorioPai(Long codigoDiretorioPai) {
+        return diretorioRepository.
+                findByCodeDiretorioPai(codigoDiretorioPai)
+                .stream()
+                .map(DiretorioEntity::toTransfer)
+                .toList();
+    }
+
 }
