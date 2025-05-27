@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -99,8 +100,11 @@ public class DiretorioService {
     }
 
     public List<DiretorioResponseTransfer> recuperarTodosOsDiretoriosDeUmDiretorioPai(Long codigoDiretorioPai) {
+        Long codigoDiretorioPaiEncontrado = Optional.ofNullable(codigoDiretorioPai)
+                .orElseThrow(() -> new IllegalArgumentException("Código do diretório pai não pode ser nulo!"));
+        logger.info("Recuperando todos os diretórios do diretório pai com código: {}", codigoDiretorioPai);
         return diretorioRepository.
-                findByCodeDiretorioPai(codigoDiretorioPai)
+                findByCodeDiretorioPai(codigoDiretorioPaiEncontrado)
                 .stream()
                 .map(DiretorioEntity::toTransfer)
                 .toList();
